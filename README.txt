@@ -1,1 +1,2 @@
 N5 Vocabulary Trainer v4 — GitHub Pages PWA\nUpload all files to the repository root. Enable Settings > Pages > Deploy from main / root.\nManage words in the app. Add/delete/search and import/export CSV. CSV columns: japanese,reading,chinese.\nChanges are stored in this browser only; export CSV for backup and transfer between devices.\n
+Pitch update: 高い and 低い confirmed [2] from Tomoshi; other entries are not claimed verified.
