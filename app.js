@@ -15,7 +15,7 @@ function render(){if(index<0)return;let w=WORDS[history[index]];$('word').textCo
 function reveal(){if(index<0)return;phase='answer';$('meaning').classList.remove('hidden');if($('showreading').checked)$('reading').classList.remove('hidden');$('hint').textContent='中文释义已显示';if(running)schedule(seconds('nextdelay')*1000,advance)}
 function schedule(ms,callback){cancel();remaining=ms;duration=ms;startedAt=Date.now();let t=token;timer=setTimeout(()=>{if(t!==token)return;callback()},ms)}
 function load(){cancel();stopSpeech();render();phase='question';if(running){if($('autoaudio').checked)say();schedule(seconds('reveal')*1000,reveal)}}
-function advance(){if(index<history.length-1)index++;else{history.push(pick());index++}load()}
+function advance(){if(!WORDS.length){$('status').textContent='请先添加单词';return}if(index<history.length-1)index++;else{history.push(pick());index++}load()}
 function back(){if(index>0){index--;load()}}
 function toggle(){if(!running){running=true;$('toggle').textContent='⏸ 暂停';if(index<0)advance();else if(phase==='answer')schedule(seconds('nextdelay')*1000,advance);else{if($('autoaudio').checked)say();schedule(seconds('reveal')*1000,reveal)}$('status').textContent='学习中'}else{running=false;cancel();stopSpeech();$('toggle').textContent='▶ 继续';$('status').textContent='已暂停'}}
 $('toggle').onclick=toggle;$('next').onclick=()=>{if(index<0){running=true;$('toggle').textContent='⏸ 暂停'}advance()};$('prev').onclick=back;$('show').onclick=()=>{if(index<0)return;cancel();reveal()};$('speak').onclick=say;
@@ -24,3 +24,5 @@ setInterval(()=>{if(!running||!timer)return;let pct=Math.min(100,(Date.now()-sta
 window.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowLeft')back();if(e.key==='ArrowRight')advance();if(e.key===' '){e.preventDefault();if(index>=0){cancel();reveal()}}});
 $('count').textContent=WORDS.length+' 词';
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+window.refreshTrainerBank=function(){cancel();stopSpeech();running=false;phase='idle';history=[];index=-1;deck=[];$('toggle').textContent='▶ 开始';$('word').textContent='准备好了吗？';$('reading').textContent='';$('meaning').textContent='';$('reading').classList.add('hidden');$('meaning').classList.add('hidden');$('hint').textContent='点击「开始」学习';$('status').textContent='词库已更新';$('count').textContent=WORDS.length+' 词';};
